@@ -1,10 +1,10 @@
 import logging
+import json
 from urlparse import urlparse, parse_qs
 
 from hammock import Hammock
 
-from .exceptions import SatmetrixAPIErrorInternalError,
-                        SatmetrixAPIErrorNotFound, SatmetrixAPIError
+from .exceptions import SatmetrixAPIErrorInternalError, SatmetrixAPIErrorNotFound, SatmetrixAPIError
 
 def _parse_page_count(url):
     last_qs = parse_qs(urlparse(url).query)
@@ -21,9 +21,9 @@ def _convert_array_to_dict(array, key):
 class Satmetrix(object):
     def __init__(self, host, domain, auth):
         headers = {'Domain': domain, 'Authorization': 'Basic {}'.format(auth)}
-        self.satmetrix Hammock(host, headers=headers)
+        self.satmetrix = Hammock(host, headers=headers)
 
-    def __search___search_page_of_items(self, _object, offset=0, limit=50, **kwargs):
+    def __search_page_of_items(self, _object, offset=0, limit=50, **kwargs):
         params = {'offset': offset, 'limit': limit}
         resp = self.satmetrix(_object)._search.POST(params=params, data=json.dumps(kwargs))
         if resp:
@@ -43,7 +43,7 @@ class Satmetrix(object):
 
 
     def __search(self, _object, offset=0, limit=50, page_limit=0,
-                  callback=None, **kwargs):
+                 callback=None, **kwargs):
         response = []
         
         resp = self.__search_page_of_items(_object, offset, limit, **kwargs)
@@ -77,7 +77,7 @@ class Satmetrix(object):
             resp = self.__search_page_of_items(_object, **params)
             next = resp['links']['next']['href']
 
-            count+=1
+            count += 1
             logging.info('Processed %s out of %s pages, added %s rows, next '
                          'url: %s', count, page_count, len(resp['data']), next)
 
@@ -93,10 +93,10 @@ class Satmetrix(object):
 
     def invitation(self, offset=0, limit=50, page_limit=0, callback=None,
                     **kwargs):
-        return self._search('invitation', offset, limit, page_limit, callback,
+        return self.__search('invitation', offset, limit, page_limit, callback,
                             **kwargs)
 
     def feedback(self, offset=0, limit=50, page_limit=0, callback=None,
                     **kwargs):
-        return self._search('feedback', offset, limit, page_limit, callback,
+        return self.__search('feedback', offset, limit, page_limit, callback,
                             **kwargs)
