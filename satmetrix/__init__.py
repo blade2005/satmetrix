@@ -19,9 +19,25 @@ def _convert_array_to_dict(array, key):
     return data
 
 class Satmetrix(object):
-    def __init__(self, host, domain, auth):
+    def __init__(self, domain, auth):
+        url = 'https://{}.satmetrix.com/app/core/v1'.format(domain)
         headers = {'Domain': domain, 'Authorization': 'Basic {}'.format(auth)}
-        self.satmetrix = Hammock(host, headers=headers)
+        self.satmetrix = Hammock(url, headers=headers)
+
+    def feedback_record(self, record_id):
+        return self.satmetrix.feedback(record_id).GET().json()
+
+    def update_feedback(self, record_id, **kwargs):
+        return self.satmetrix.feedback(record_id).PUT(data=json.dumps(kwargs)).json()
+
+    def invitation_record(self, record_id):
+        return self.satmetrix.invitations(record_id).GET().json()
+
+    def nominate_contact(self, contact_id=None, **kwargs):
+        if contact_id:
+            return self.satmetrix.invitations(contact_id).POST(data=json.dumps(kwargs)).json()
+        else:
+            return self.satmetrix.invitations.POST(data=json.dumps(kwargs)).json()
 
     def __search_page_of_items(self, _object, offset=0, limit=50, **kwargs):
         params = {'offset': offset, 'limit': limit}
