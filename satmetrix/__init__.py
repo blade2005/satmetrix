@@ -70,7 +70,10 @@ class Satmetrix(object):
             else:
                 response.extend(resp['data'])
 
-        next = resp['links']['next']['href']
+        if 'next' in resp['links'].keys():
+            next = resp['links']['next']['href']
+        else:
+            next = None
 
         page_count = _parse_page_count(resp['links']['last']['href'])
 
