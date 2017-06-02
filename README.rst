@@ -17,12 +17,15 @@ Retrieve one feedback record using contact_record_id::
 	r = sm.feedback_record(contact_id)
 
 Update feedback record::
+
 	r = sm.update_feedback(contact_record_id, data=[{'contact_record_id': contact_record_id, 'comment_text': 'Called customer, left vm. Will call back to cust next week.'}])
 
 Retrieve invitation record using contact_record_id::
+
 	r = sm.invitation_record(contact_record_id)
 
 Nominate Contact::
+
 	r = sm.nominate_contact(data=[{'contact_id': 'email', 'email': 'email'}])
 	r = sm.nominate_contact(contact_record_id)
 
