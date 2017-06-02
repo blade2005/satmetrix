@@ -34,3 +34,9 @@ The above will return all the feedback you have. You can pass in the following a
 Note
 ~~~~
 Satmetrix has said there isn't an endpoint other than searching.
+
+
+Building New versions::
+
+    python2.7 setup.py bdist bdist_wheel
+    twine upload --skip-existing dist/*
