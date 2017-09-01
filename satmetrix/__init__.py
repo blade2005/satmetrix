@@ -33,16 +33,14 @@ class Satmetrix(object):
     def invitation_record(self, record_id):
         return self.satmetrix.invitations(record_id).GET().json()
 
-    def nominate_contact(self, contact_id=None, **kwargs):
-        resp = None
-        if contact_id:
-            resp = self.satmetrix.invitations(contact_id).POST(data=json.dumps(kwargs))
-        else:
-            resp = self.satmetrix.invitations.POST(data=json.dumps(kwargs))
+    def nominate_contact(self, **kwargs):
+        resp = self.satmetrix.invitations.POST(data=json.dumps(kwargs))
         try:
-            return resp.json()
+            r = resp.json()
         except ValueError as error:
             return resp
+        else:
+            return resp.json()
 
     def __search_page_of_items(self, _object, offset=0, limit=50, **kwargs):
         params = {'offset': offset, 'limit': limit}
